@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { configured, requireAdmin } from '@/lib/supabase';
 import { AdminPanel } from '@/components/admin-panel';
+import { TestEmail } from '@/components/test-email';
 import { logout } from './actions';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Administracija', robots: { index: false, follow: false } };
@@ -39,6 +40,7 @@ export default async function Admin() {
         </form>
       </div>
       <AdminPanel products={products.data} orders={orders.data} settings={settings.data} />
+      <TestEmail />
     </section>
   );
 }

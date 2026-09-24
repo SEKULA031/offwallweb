@@ -4,6 +4,44 @@ import { redirect } from 'next/navigation';
 import { configured, requireAdmin, sessionClient, serviceClient } from '@/lib/supabase';
 import { productSchema, settingsSchema } from '@/lib/validation';
 import { sendPendingEmails } from '@/lib/email';
+import { Resend } from 'resend';
+
+export async function testEmail() {
+  try {
+    await requireAdmin();
+    const key = process.env.RESEND_API_KEY;
+    const from = process.env.RESEND_FROM;
+    const to = process.env.ORDER_NOTIFICATION_EMAIL;
+    if (!key || !from || !to)
+      return {
+        message:
+          'Nedostaju Resend podešavanja u Vercelu. Proveri RESEND_API_KEY, RESEND_FROM i ORDER_NOTIFICATION_EMAIL, pa ponovi objavu.',
+      };
+    const { error } = await new Resend(key).emails.send(
+      {
+        from,
+        to,
+        subject: 'OFFWALL — probni email',
+        text: 'Ovo je probni email poslat iz OFFWALL admin panela. Vercel i Resend su povezani. Ova poruka nije porudžbina i ne uključuje primanje porudžbina.',
+      },
+      { idempotencyKey: `offwall-admin-test-${Math.floor(Date.now() / 60000)}` },
+    );
+    if (error)
+      return {
+        message:
+          error.name === 'validation_error'
+            ? 'Resend je odbio poruku. Proveri adresu pošiljaoca i primaoca. Sa resend.dev adrese možeš slati samo na email kojim je napravljen Resend nalog. Detalji su u Resend panelu.'
+            : 'Slanje nije uspelo. Proveri Resend ključ, dozvolu za slanje i podešavanja domena u Resend panelu.',
+      };
+    return {
+      message: `Resend je prihvatio probnu poruku za ${to}. Proveri prijemno sanduče i Spam. Ponovni klik u istom minutu ne šalje dodatnu poruku.`,
+    };
+  } catch {
+    return {
+      message: 'Provera nije uspela. Proveri administratorsku prijavu i vezu sa servisima.',
+    };
+  }
+}
 export async function login(_previous: { error: string }, form: FormData) {
   if (!configured()) return { error: 'Povežite Supabase pre prijave.' };
   const db = await sessionClient();

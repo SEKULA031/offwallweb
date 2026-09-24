@@ -21,7 +21,7 @@ export default async function Home() {
             okvir.
           </p>
           <Link className="button primary" href="/posteri">
-            Pronađi svoj poster ↗
+            Pronađi svoj poster
           </Link>
         </div>
         <figure>
@@ -49,7 +49,7 @@ export default async function Home() {
         </h2>
         <Catalog products={products} demo={demo} compact />
         <Link className="button" href="/posteri">
-          Pogledaj celu kolekciju ↗
+          Pogledaj celu kolekciju
         </Link>
       </section>
       <section className="section surface feature" id="ramovi">
@@ -71,13 +71,30 @@ export default async function Home() {
           <p>
             Sa ramom ili bez. Odaberi završnicu koja pristaje tvom prostoru i pusti da motiv govori.
           </p>
-          <p className="caption muted">
-            CRNI / BELI / PRIRODNI
-            <br />
-            Dostupne opcije i cene pronađi na stranici svakog postera.
-          </p>
+          <div className="frame-options">
+            {[
+              [
+                'Crni',
+                'Jasna linija i izražen kontrast. Crni ram daje motivu dubinu i lepo povezuje tamne detalje u prostoru. Za fotografije, grafike i postere koje želiš da istakneš.',
+              ],
+              [
+                'Beli',
+                'Jednostavan i nenametljiv. Beli ram ostavlja motivu prostor da diše i lako se uklapa uz svetle zidove. Za miran, sveden izgled bez suvišnih detalja.',
+              ],
+              [
+                'Drvo',
+                'Topliji ton i karakter koji se primećuje izbliza. Završnica u drvetu povezuje poster sa nameštajem i prirodnim tonovima prostora. Za kutak u kom svaki detalj ima svoje mesto.',
+              ],
+            ].map(([name, description]) => (
+              <article key={name}>
+                <h3>{name}</h3>
+                <p>{description}</p>
+              </article>
+            ))}
+          </div>
+          <p className="caption muted">Dostupne opcije i tačne cene proveri uz izabrani poster.</p>
           <Link className="button dark" href="/posteri">
-            Izaberi poster i ram ↗
+            Izaberi poster i ram
           </Link>
         </div>
       </section>
@@ -89,41 +106,72 @@ export default async function Home() {
           OSTALO JE NA NAMA.
         </h2>
         <p className="lead">
-          Tvoja fotografija, omiljeni trenutak ili potpuno nova ideja. Zajedno pravimo poster koji
-          postoji samo za tebe.
+          Fotografija sa putovanja, trenutak koji želiš da sačuvaš, poklon za nekog svog ili ideja
+          koju još ne znaš kako da nacrtaš. Pošalji nam ono od čega želiš da krenemo, a mi ćemo ti
+          pomoći da to pretvoriš u poster koji ima tvoju priču.
         </p>
         <div className="steps">
-          <p>01 Podeli ideju</p>
-          <p>02 Pogledaj predlog</p>
-          <p>03 Odaberi format</p>
+          <div>
+            <h3>01 / Podeli ideju</h3>
+            <p>
+              Piši nam na Instagramu ili mejlom. Pošalji fotografiju, inspiraciju ili kratak opis
+              onoga što zamišljaš.
+            </p>
+          </div>
+          <div>
+            <h3>02 / Dogovorimo detalje</h3>
+            <p>
+              Zajedno biramo smer dizajna, format i ram. Cenu i rok dogovaramo pre početka izrade.
+            </p>
+          </div>
+          <div>
+            <h3>03 / Pogledaj svoj poster</h3>
+            <p>
+              Dobijaš predlog na pregled. Nakon što usaglasimo izgled, pripremamo poster za štampu i
+              tvoj zid.
+            </p>
+          </div>
         </div>
-        <a
-          className="button dark"
-          href={
-            settings.contact_email
-              ? `mailto:${settings.contact_email}?subject=Poster%20po%20mojoj%20meri`
-              : 'https://www.instagram.com/offwall.rs/'
-          }
-        >
-          Započni svoj poster ↗
-        </a>
+        <div className="contact-actions">
+          <a
+            className="button dark"
+            href={
+              settings.contact_email
+                ? `mailto:${settings.contact_email}?subject=Poster%20po%20mojoj%20meri`
+                : 'mailto:soggacreativelab@gmail.com?subject=Poster%20po%20mojoj%20meri'
+            }
+          >
+            Pošalji ideju mejlom
+          </a>
+          <a className="button" href="https://www.instagram.com/offwall.rs/">
+            Piši nam na Instagramu
+          </a>
+        </div>
+        {settings.contact_email && (
+          <a className="text-link" href={`mailto:${settings.contact_email}`}>
+            {settings.contact_email}
+          </a>
+        )}
       </section>
       <section className="section ink stack" id="o-nama">
         <p className="eyebrow">04 / OVO JE OFFWALL</p>
         <h2>
-          NIJE SAMO
+          PETORO NAS.
           <br />
-          DEKORACIJA.
+          TVOJA PRIČA NA ZIDU.
         </h2>
         <p className="lead">
-          To je utakmica koju pamtiš. Film koji znaš napamet. Par patika koji govori sve.
+          OFFWALL je naš prvi zajednički projekat. Nas petoro studenata, iz različitih oblasti
+          dizajna, spojili smo znanje, ideje i različite poglede na to kako prostor može da izgleda.
         </p>
         <p className="lead">
-          OFFWALL dizajnira, izrađuje i uramljuje postere za prostore sa ličnim pečatom. Od prve
-          ideje do mesta na tvom zidu.
+          Kroz svaki poster učimo, gradimo iskustvo i stvaramo nešto iza čega zajedno stojimo.
+          Želimo da ti pomognemo da ostaviš lični trag u prostoru koji zoveš svojim: kroz motiv koji
+          voliš, uspomenu koju čuvaš ili ideju koju ćemo zajedno razviti.
         </p>
+        <p className="lead">Od prve skice do rama, tvoju ideju pretvaramo u deo tvog prostora.</p>
         <a className="button primary" href="https://www.instagram.com/offwall.rs/">
-          Upoznaj OFFWALL ↗
+          Upoznaj OFFWALL
         </a>
       </section>
       <section className="section stack">
@@ -150,7 +198,7 @@ export default async function Home() {
           ],
           [
             'Šta ako je pošiljka oštećena?',
-            'Sačuvaj ambalažu i fotografiši oštećenje, pa nam se javi preko kontakta. Uslovi povrata dostupni su na stranici Dostava i povrat.',
+            'Javi nam se preko kontakta i opiši problem. Fotografije mogu pomoći, ali fotografije i originalna ambalaža nisu uslov za reklamaciju. Detalji su na stranici Dostava i povrat.',
           ],
         ].map(([q, a]) => (
           <details className="faq" key={q}>

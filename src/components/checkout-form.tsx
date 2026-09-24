@@ -86,7 +86,7 @@ export function CheckoutForm({
         </p>
         <p>Potvrda stiže emailom. Sačuvaj broj porudžbine za sva pitanja.</p>
         <Link className="button dark" href="/posteri">
-          Nazad na postere ↗
+          Nazad na postere
         </Link>
       </div>
     );
@@ -95,7 +95,7 @@ export function CheckoutForm({
       <div className="stack">
         <p>Korpa je prazna.</p>
         <Link className="button dark" href="/posteri">
-          Izaberi poster ↗
+          Izaberi poster
         </Link>
       </div>
     );
@@ -186,7 +186,7 @@ export function CheckoutForm({
           </p>
         )}
         <button className="button primary full" type="submit" disabled={busy}>
-          {busy ? 'Čuvamo porudžbinu…' : 'Naruči uz obavezu plaćanja ↗'}
+          {busy ? 'Čuvamo porudžbinu…' : 'Naruči uz obavezu plaćanja'}
         </button>
         <p className="caption muted">Plaćanje kuriru pri preuzimanju.</p>
       </aside>

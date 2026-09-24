@@ -110,12 +110,12 @@ export function ProductDetail({ product, demo }: { product: Product; demo: boole
             }
           }}
         >
-          {added ? 'Dodato u korpu ✓' : 'Dodaj u korpu ↗'}
+          {added ? 'Dodato u korpu' : 'Dodaj u korpu'}
         </button>
         <div aria-live="polite">
           {added && (
             <Link className="text-link" href="/korpa">
-              Pogledaj korpu i nastavi ↗
+              Pogledaj korpu i nastavi
             </Link>
           )}
         </div>

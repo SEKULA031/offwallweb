@@ -31,7 +31,7 @@ export function CartPage({
         <h2>Tvoj zid čeka.</h2>
         <p>Korpa je trenutno prazna. Pronađi motiv koji liči na tebe.</p>
         <Link className="button primary" href="/posteri">
-          Istraži postere ↗
+          Istraži postere
         </Link>
       </div>
     );
@@ -88,7 +88,7 @@ export function CartPage({
         <p className="caption">Plaćanje pouzećem / Srbija</p>
         {!demo && settings.checkout_enabled && resolved.every((r) => r.variant) ? (
           <Link className="button primary full" href="/checkout">
-            Nastavi na poručivanje ↗
+            Nastavi na poručivanje
           </Link>
         ) : (
           <p className="notice">
@@ -100,7 +100,7 @@ export function CartPage({
           </p>
         )}
         <Link className="text-link" href="/posteri">
-          ← Nastavi kupovinu
+          Nastavi kupovinu
         </Link>
       </aside>
     </div>

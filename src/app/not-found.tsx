@@ -5,7 +5,7 @@ export default function NotFound() {
       <p className="eyebrow accent">404 / PRAZAN ZID</p>
       <h1 className="section-title">Ovaj motiv nije tu.</h1>
       <Link className="button dark" href="/posteri">
-        Pogledaj postere ↗
+        Pogledaj postere
       </Link>
     </section>
   );

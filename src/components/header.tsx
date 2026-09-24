@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useCart } from './cart-provider';
 export function Header() {
@@ -8,7 +9,8 @@ export function Header() {
   return (
     <header className="header">
       <Link className="logo" href="/" aria-label="OFFWALL početna">
-        OFFWALL
+        <Image src="/offwall-logo.png" alt="" width={48} height={48} />
+        <span>OFFWALL</span>
       </Link>
       <nav className={open ? 'nav open' : 'nav'} aria-label="Glavna navigacija" id="main-nav">
         {[

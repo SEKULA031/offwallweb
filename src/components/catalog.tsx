@@ -93,7 +93,7 @@ export function Catalog({
               {demo ? '*' : ''}
             </p>
             <Link className="button" href={`/posteri/${p.slug}`}>
-              Detalji ↗
+              Detalji
             </Link>
           </article>
         ))}

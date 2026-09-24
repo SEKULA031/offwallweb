@@ -24,10 +24,37 @@ export default async function Info({ params }: { params: Promise<{ page: string 
       <div className="prose">
         {info[1] || 'Informacije su u pripremi. Prodavnica još ne prima porudžbine.'}
       </div>
+      {page === 'dostava' && (
+        <div className="stack small-gap">
+          <h2 className="small-heading">Obrazac za odustanak</h2>
+          <p>
+            Preuzmi PDF, popuni ga i pošalji na kontakt mejl prodavnice. Obrazac možeš popuniti u
+            PDF čitaču ili odštampati. Odustanak možeš izjaviti i jasnom izjavom mejlom.
+          </p>
+          <a className="button dark" href="/dokumenti/obrazac-za-odustanak.pdf" download>
+            Preuzmi obrazac za odustanak (PDF)
+          </a>
+          {s.contact_email && (
+            <a
+              className="text-link"
+              href={`mailto:${s.contact_email}?subject=Odustanak%20od%20kupovine`}
+            >
+              {s.contact_email}
+            </a>
+          )}
+        </div>
+      )}
       {page === 'kontakt' && (
-        <a className="button dark" href="https://www.instagram.com/offwall.rs/">
-          Instagram / @offwall.rs ↗
-        </a>
+        <div className="contact-actions">
+          {s.contact_email && (
+            <a className="button" href={`mailto:${s.contact_email}`}>
+              Pošalji nam mejl
+            </a>
+          )}
+          <a className="button dark" href="https://www.instagram.com/offwall.rs/">
+            Instagram / @offwall.rs
+          </a>
+        </div>
       )}
     </section>
   );

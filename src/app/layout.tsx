@@ -34,7 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               target="_blank"
               rel="noreferrer"
             >
-              Instagram / @offwall.rs ↗
+              Instagram / @offwall.rs
             </a>
             <div className="controls">
               <Link className="button" href="/informacije/dostava">

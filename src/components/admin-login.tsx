@@ -19,7 +19,7 @@ export function LoginForm() {
         </p>
       )}
       <button className="button dark" disabled={pending}>
-        {pending ? 'Prijavljivanje…' : 'Prijavi se ↗'}
+        {pending ? 'Prijavljivanje…' : 'Prijavi se'}
       </button>
       <p className="caption muted">Pristup je omogućen samo odobrenim administratorima.</p>
     </form>

@@ -17,7 +17,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <section className="section stack">
       <Link className="text-link" href="/posteri">
-        ← Svi posteri
+        Svi posteri
       </Link>
       <ProductDetail product={product} demo={demo} />
     </section>

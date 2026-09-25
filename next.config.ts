@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 const supabase = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const config: NextConfig = {
+  outputFileTracingIncludes: {
+    '/*': ['./assets/fonts/DejaVuSans.ttf', './public/dokumenti/obrazac-za-odustanak.pdf'],
+  },
   experimental: { serverActions: { bodySizeLimit: '12mb' } },
   poweredByHeader: false,
   images: {

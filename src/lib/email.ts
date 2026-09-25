@@ -1,7 +1,7 @@
 import 'server-only';
 import { Resend } from 'resend';
 import { serviceClient } from './supabase';
-import { money } from './types';
+import { orderMessage, orderAttachments, type EmailOrder } from './order-message';
 export async function sendPendingEmails(orderId?: string) {
   const db = serviceClient();
   const { data: jobs, error } = await db.rpc('claim_emails', { p_order_id: orderId ?? null });
@@ -20,26 +20,21 @@ export async function sendPendingEmails(orderId?: string) {
         .eq('id', job.order_id)
         .single();
       if (orderError || !order) throw new Error('Order unavailable');
-      const lines = order.order_items
-        .map(
-          (i: {
-            product_name: string;
-            size: string;
-            frame: string;
-            quantity: number;
-            unit_price: number;
-          }) =>
-            `${i.product_name} / ${i.size} / ${i.frame} × ${i.quantity} — ${money(i.unit_price * i.quantity)}`,
-        )
-        .join('\n');
+      const { data: settings } = await db.from('store_settings').select('contact_email').single();
+      if (!settings?.contact_email) throw new Error('Store contact unavailable');
+      const contact = settings.contact_email;
       const c = order.customer;
-      const text = `OFFWALL — Porudžbina #${order.number}\n\n${job.kind === 'customer' ? 'Hvala! Primili smo tvoju porudžbinu.' : 'Nova porudžbina.'}\n\n${lines}\n\nDostava: ${money(order.shipping)}\nUkupno: ${money(order.total)}\nPlaćanje: pouzećem\n\n${c.name}\n${c.address}\n${c.postalCode} ${c.city}, Srbija\n${c.phone}\n${c.email}\n${c.note || ''}\n\nDostava:\n${order.policy_snapshot.delivery}\n\nPovrat:\n${order.policy_snapshot.returns}\n\nUslovi:\n${order.policy_snapshot.terms}`;
+      const { text, html } = orderMessage(order as EmailOrder, contact, job.kind !== 'customer');
+      const attachments = await orderAttachments(order as EmailOrder, contact);
       const { error: sendError } = await new Resend(process.env.RESEND_API_KEY).emails.send(
         {
           from: process.env.RESEND_FROM,
           to: job.kind === 'customer' ? c.email : process.env.ORDER_NOTIFICATION_EMAIL,
           subject: `OFFWALL | Porudžbina #${order.number}`,
           text,
+          html,
+          attachments,
+          replyTo: contact,
         },
         { idempotencyKey: `offwall-${job.id}` },
       );

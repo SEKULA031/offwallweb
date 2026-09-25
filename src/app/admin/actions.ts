@@ -5,10 +5,11 @@ import { configured, requireAdmin, sessionClient, serviceClient } from '@/lib/su
 import { productSchema, settingsSchema } from '@/lib/validation';
 import { sendPendingEmails } from '@/lib/email';
 import { Resend } from 'resend';
+import { orderAttachments, orderMessage, type EmailOrder } from '@/lib/order-message';
 
 export async function testEmail() {
   try {
-    await requireAdmin();
+    const db = await requireAdmin();
     const key = process.env.RESEND_API_KEY;
     const from = process.env.RESEND_FROM;
     const to = process.env.ORDER_NOTIFICATION_EMAIL;
@@ -17,14 +18,50 @@ export async function testEmail() {
         message:
           'Nedostaju Resend podešavanja u Vercelu. Proveri RESEND_API_KEY, RESEND_FROM i ORDER_NOTIFICATION_EMAIL, pa ponovi objavu.',
       };
+    const { data: settings } = await db.from('store_settings').select('*').single();
+    if (!settings?.contact_email)
+      return { message: 'Unesi kontakt mejl u podešavanja prodavnice.' };
+    const preview: EmailOrder = {
+      number: 0,
+      created_at: new Date().toISOString(),
+      shipping: settings.shipping_price,
+      total: 149000 + settings.shipping_price,
+      customer: {
+        name: 'PROBNI KUPAC',
+        address: 'Primer adrese 1',
+        postalCode: '11000',
+        city: 'Beograd',
+        email: to,
+        phone: 'Primer telefona',
+        note: 'TEST — nije stvarna porudžbina.',
+      },
+      order_items: [
+        {
+          product_name: 'Primer OFFWALL postera',
+          size: '30 × 40',
+          frame: 'Bez rama',
+          quantity: 1,
+          unit_price: 149000,
+        },
+      ],
+      policy_snapshot: {
+        delivery: settings.delivery_text,
+        returns: settings.returns_text,
+        terms: settings.terms_text,
+        privacy: settings.privacy_text,
+      },
+    };
+    const message = orderMessage(preview, settings.contact_email, false, true);
     const { error } = await new Resend(key).emails.send(
       {
         from,
         to,
         subject: 'OFFWALL — probni email',
-        text: 'Ovo je probni email poslat iz OFFWALL admin panela. Vercel i Resend su povezani. Ova poruka nije porudžbina i ne uključuje primanje porudžbina.',
+        ...message,
+        replyTo: settings.contact_email,
+        attachments: await orderAttachments(preview, settings.contact_email),
       },
-      { idempotencyKey: `offwall-admin-test-${Math.floor(Date.now() / 60000)}` },
+      { idempotencyKey: `offwall-admin-preview-${crypto.randomUUID()}` },
     );
     if (error)
       return {
@@ -34,7 +71,7 @@ export async function testEmail() {
             : 'Slanje nije uspelo. Proveri Resend ključ, dozvolu za slanje i podešavanja domena u Resend panelu.',
       };
     return {
-      message: `Resend je prihvatio probnu poruku za ${to}. Proveri prijemno sanduče i Spam. Ponovni klik u istom minutu ne šalje dodatnu poruku.`,
+      message: `Resend je prihvatio probnu poruku za ${to}. Proveri prijemno sanduče, Spam i dva PDF priloga. Ovo nije stvarna porudžbina.`,
     };
   } catch {
     return {

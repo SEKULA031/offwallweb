@@ -6,18 +6,18 @@ test('homepage, responsive navigation and original artwork', async ({ page }) =>
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );
-  await page.getByRole('link', { name: 'Pronađi svoj poster ↗' }).click();
+  await page.getByRole('link', { name: 'Pronađi svoj poster', exact: true }).click();
   await expect(page.locator('.product-card')).toHaveCount(6);
 });
 test('filter, configure, persist cart and remove item', async ({ page }) => {
   await page.goto('/posteri');
   await page.getByRole('searchbox').fill('Negroni');
   await expect(page.locator('.product-card')).toHaveCount(1);
-  await page.getByRole('link', { name: 'Detalji ↗' }).click();
+  await page.getByRole('link', { name: 'Detalji', exact: true }).click();
   await page.getByRole('button', { name: '50 × 70', exact: true }).click();
   await page.getByRole('button', { name: 'Crni', exact: true }).click();
-  await page.getByRole('button', { name: 'Dodaj u korpu ↗' }).click();
-  await page.getByRole('link', { name: 'Pogledaj korpu i nastavi ↗' }).click();
+  await page.getByRole('button', { name: 'Dodaj u korpu', exact: true }).click();
+  await page.getByRole('link', { name: 'Pogledaj korpu i nastavi', exact: true }).click();
   await expect(page.locator('.cart-row')).toContainText('50 × 70 / Crni');
   await page.reload();
   await expect(page.locator('.cart-row')).toHaveCount(1);

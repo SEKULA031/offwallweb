@@ -143,7 +143,11 @@ export async function uploadImage(form: FormData) {
             ? 'image/webp'
             : null;
     if (!mime || file.type !== mime) return { error: 'Dozvoljeni formati: JPG, PNG, WebP.' };
-    const path = `${crypto.randomUUID()}.${mime === 'image/jpeg' ? 'jpg' : mime.split('/')[1]}`;
+    const imageName =
+      String(form.get('slug') || 'poster')
+        .replace(/[^a-z0-9-]/g, '')
+        .slice(0, 100) || 'poster';
+    const path = `${imageName}-${crypto.randomUUID()}.${mime === 'image/jpeg' ? 'jpg' : mime.split('/')[1]}`;
     const { error } = await db.storage
       .from('product-images')
       .upload(path, bytes, { contentType: mime, upsert: false });

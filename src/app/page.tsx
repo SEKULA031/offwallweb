@@ -2,11 +2,29 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getCatalog } from '@/lib/catalog';
 import { Catalog } from '@/components/catalog';
+import { CategoryLinks } from '@/components/category-links';
+import { StructuredData } from '@/components/structured-data';
+import { homeSeo, pageMetadata, SITE_URL } from '@/lib/seo';
+export async function generateMetadata() {
+  const { demo } = await getCatalog();
+  return pageMetadata(homeSeo.title, homeSeo.description, '/', '/artwork/jordan-chicago.png', demo);
+}
 export const dynamic = 'force-dynamic';
 export default async function Home() {
   const { products, settings, demo } = await getCatalog();
   return (
     <>
+      <StructuredData
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          '@id': `${SITE_URL}/#organization`,
+          name: 'OFFWALL',
+          url: SITE_URL,
+          logo: `${SITE_URL}/offwall-logo.png`,
+          sameAs: ['https://www.instagram.com/offwall.rs/'],
+        }}
+      />
       <section className="hero section ink">
         <div className="hero-message">
           <p className="eyebrow">POSTERI. RAMOVI. LIČNI PEČAT.</p>
@@ -31,6 +49,7 @@ export default async function Home() {
               alt="Jordan Chicago poster u OFFWALL ramu"
               fill
               priority
+              fetchPriority="high"
               sizes="(max-width: 1000px) 90vw, 45vw"
             />
           </div>
@@ -47,6 +66,7 @@ export default async function Home() {
           <br />
           SVOJ MOTIV.
         </h2>
+        <CategoryLinks products={products} />
         <Catalog products={products} demo={demo} compact />
         <Link className="button" href="/posteri">
           Pogledaj celu kolekciju

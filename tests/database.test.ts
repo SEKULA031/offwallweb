@@ -21,6 +21,7 @@ beforeAll(async () => {
  create schema storage; create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
  create table storage.objects(id uuid primary key,bucket_id text);alter table storage.objects enable row level security;`);
   await db.exec(readFileSync('supabase/migrations/001_store.sql', 'utf8'));
+  await db.exec(readFileSync('supabase/migrations/002_seo.sql', 'utf8'));
   await db.exec(`insert into public.products(id,slug,name,category,description,images,published) values('${pid}','test','Test poster','SPORT','Opis postera',array['/artwork/jordan-chicago.png'],true);
  insert into public.variants(id,product_id,size,frame,price) values('${vid}','${pid}','30 × 40','Bez rama',149000);
  update public.store_settings set contact_email='test@example.com',business_name='Test shop',business_address='Test adresa 12',business_id='Test ID',delivery_text=repeat('D',20),returns_text=repeat('R',20),privacy_text=repeat('P',20),terms_text=repeat('T',20),shipping_price=40000,checkout_enabled=true;`);
@@ -168,6 +169,43 @@ describe('Transactional commerce and security', () => {
       ).toBe(199000);
     } finally {
       await db.exec("reset role;set request.jwt.claim.sub=''");
+    }
+  });
+  it('persists SEO fields and resolves every historical slug to the product, with RLS', async () => {
+    const uid = '30000000-0000-4000-8000-000000000001';
+    await db.exec(`set request.jwt.claim.sub='${uid}';set role authenticated`);
+    try {
+      await db.exec(
+        `update products set seo_title='Test SEO',seo_description='Opis za Google',image_alts='{"/artwork/jordan-chicago.png":"Crvena patika"}',slug='test-new' where id='${pid}'`,
+      );
+      await db.exec(`update products set slug='test-newest' where id='${pid}'`);
+      expect((await db.query('select slug from product_slug_history order by slug')).rows).toEqual([
+        { slug: 'test' },
+        { slug: 'test-new' },
+      ]);
+      await expect(
+        db.exec("update products set slug='test' where slug='admin-test'"),
+      ).rejects.toThrow('SLUG_RESERVED');
+      expect((await db.query('select seo_title from products where id=$1', [pid])).rows).toEqual([
+        { seo_title: 'Test SEO' },
+      ]);
+    } finally {
+      await db.exec("reset role;set request.jwt.claim.sub=''");
+    }
+    await db.exec('set role anon');
+    try {
+      expect((await db.query('select * from product_slug_history')).rows).toHaveLength(2);
+      await expect(
+        db.exec("insert into product_slug_history values('hijack',gen_random_uuid())"),
+      ).rejects.toThrow();
+    } finally {
+      await db.exec('reset role');
+    }
+    await db.exec(`update products set published=false where id='${pid}';set role anon`);
+    try {
+      expect((await db.query('select * from product_slug_history')).rows).toHaveLength(0);
+    } finally {
+      await db.exec(`reset role;update products set published=true where id='${pid}'`);
     }
   });
 });

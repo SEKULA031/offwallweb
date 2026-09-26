@@ -10,6 +10,7 @@ import {
   retryEmails,
 } from '@/app/admin/actions';
 import { demoProducts } from '@/lib/demo';
+import { productSeo, SITE_URL } from '@/lib/seo';
 import { money, type Product, type StoreSettings } from '@/lib/types';
 type Order = {
   id: string;
@@ -218,6 +219,39 @@ export function AdminPanel({
                   onChange={(e) => setEditor({ ...editor, description: e.target.value })}
                 />
               </label>
+              <fieldset className="stack small-gap">
+                <legend>Prikaz u Google pretrazi</legend>
+                <p className="caption muted">
+                  Prazna polja koriste naziv i opis proizvoda. Promena URL naziva čuva preusmerenje
+                  sa prethodne adrese.
+                </p>
+                <label>
+                  SEO naslov
+                  <input
+                    maxLength={100}
+                    value={editor.seo_title || ''}
+                    placeholder={`${editor.name} — poster`}
+                    onChange={(e) => setEditor({ ...editor, seo_title: e.target.value })}
+                  />
+                </label>
+                <label>
+                  SEO opis
+                  <textarea
+                    maxLength={300}
+                    rows={3}
+                    value={editor.seo_description || ''}
+                    placeholder="Kratko opiši konkretan motiv i šta kupac dobija."
+                    onChange={(e) => setEditor({ ...editor, seo_description: e.target.value })}
+                  />
+                </label>
+                <p className="caption">
+                  Pregled: {productSeo(editor).title} | OFFWALL
+                  <br />
+                  {SITE_URL}/posteri/{editor.slug}
+                  <br />
+                  {productSeo(editor).description}
+                </p>
+              </fieldset>
               <div className="stack small-gap">
                 <label>
                   Dodaj sliku (JPG, PNG ili WebP, do 8 MB)
@@ -230,6 +264,7 @@ export function AdminPanel({
                       if (!file) return;
                       const data = new FormData();
                       data.set('image', file);
+                      data.set('slug', editor.slug);
                       start(async () => {
                         try {
                           const result = await uploadImage(data);
@@ -251,6 +286,20 @@ export function AdminPanel({
                   {editor.images.map((src, i) => (
                     <div className="image-edit" key={src}>
                       <Image src={src} alt={`Slika ${i + 1}`} width={100} height={120} />
+                      <label>
+                        Opis slike (alt)
+                        <input
+                          maxLength={300}
+                          value={editor.image_alts?.[src] || ''}
+                          placeholder={`${editor.name} — prikaz postera`}
+                          onChange={(e) =>
+                            setEditor({
+                              ...editor,
+                              image_alts: { ...editor.image_alts, [src]: e.target.value },
+                            })
+                          }
+                        />
+                      </label>
                       <button
                         type="button"
                         onClick={() =>

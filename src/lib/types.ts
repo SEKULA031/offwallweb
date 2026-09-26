@@ -8,6 +8,10 @@ export type Product = {
   images: string[];
   published: boolean;
   variants: Variant[];
+  seo_title?: string;
+  seo_description?: string;
+  image_alts?: Record<string, string>;
+  updated_at?: string;
 };
 export type CartItem = {
   variantId: string;

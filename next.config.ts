@@ -6,6 +6,14 @@ const config: NextConfig = {
   },
   experimental: { serverActions: { bodySizeLimit: '12mb' } },
   poweredByHeader: false,
+  async redirects() {
+    return ['theoffwall.com', 'offwallweb.vercel.app'].map((host) => ({
+      source: '/:path*',
+      has: [{ type: 'host' as const, value: host }],
+      destination: 'https://www.theoffwall.com/:path*',
+      permanent: true,
+    }));
+  },
   images: {
     remotePatterns: supabase
       ? [
@@ -22,6 +30,9 @@ const config: NextConfig = {
       {
         source: '/(.*)',
         headers: [
+          ...(process.env.VERCEL_ENV === 'preview'
+            ? [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
+            : []),
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },

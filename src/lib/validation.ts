@@ -34,6 +34,9 @@ export const productSchema = z.object({
   description: z.string().trim().min(5).max(3000),
   images: z.array(z.string().max(2048)).min(1).max(8),
   published: z.boolean(),
+  seo_title: z.string().trim().max(100).default(''),
+  seo_description: z.string().trim().max(300).default(''),
+  image_alts: z.record(z.string().max(2048), z.string().trim().max(300)).default({}),
   variants: z
     .array(
       z.object({

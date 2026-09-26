@@ -188,7 +188,7 @@ small {
 .button.primary {
   background: var(--red);
   border-color: var(--red);
-  color: var(--paper);
+  color: #fff;
 }
 .button.primary:hover {
   background: var(--accent);
@@ -219,7 +219,7 @@ small {
 }
 .red {
   background: var(--red);
-  color: var(--paper);
+  color: #fff;
 }
 .surface {
   background: var(--surface);
@@ -303,7 +303,7 @@ small {
 }
 .statement {
   background: var(--red);
-  color: var(--paper);
+  color: #fff;
   padding: 16px var(--space);
   font: 500 14px/20px var(--display);
   max-width: 1800px;
@@ -945,4 +945,25 @@ footer .controls {
   .contact-actions .button {
     width: 100%;
   }
+}
+
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  font-size: 0.875rem;
+}
+.breadcrumbs li + li::before {
+  content: '/';
+  padding-right: 0.5rem;
+}
+.category-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+}
+.image-edit label {
+  max-width: 240px;
 }

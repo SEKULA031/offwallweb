@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SITE_URL, homeSeo } from '@/lib/seo';
 import '@fontsource-variable/space-grotesk';
 import '@fontsource-variable/inter';
 import './globals.css';
@@ -6,9 +7,9 @@ import { CartProvider } from '@/components/cart-provider';
 import { Header } from '@/components/header';
 import Link from 'next/link';
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: { default: 'OFFWALL — Tvoj zid. Tvoja pravila.', template: '%s | OFFWALL' },
-  description: 'Posteri, ramovi i lični pečat. Pronađi motiv za svoj zid.',
+  metadataBase: new URL(SITE_URL),
+  title: { default: `${homeSeo.title} | OFFWALL`, template: '%s | OFFWALL' },
+  description: homeSeo.description,
   openGraph: { type: 'website', locale: 'sr_RS', siteName: 'OFFWALL' },
 };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

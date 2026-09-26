@@ -1,5 +1,19 @@
 import { notFound } from 'next/navigation';
 import { getCatalog } from '@/lib/catalog';
+import { infoSeo, pageMetadata } from '@/lib/seo';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+export async function generateMetadata({ params }: { params: Promise<{ page: string }> }) {
+  const { page } = await params;
+  const seo = infoSeo[page];
+  if (!seo) notFound();
+  return pageMetadata(
+    seo.title,
+    seo.description,
+    `/informacije/${page}`,
+    undefined,
+    page === 'privatnost' || page === 'uslovi',
+  );
+}
 export const dynamic = 'force-dynamic';
 export default async function Info({ params }: { params: Promise<{ page: string }> }) {
   const { page } = await params;
@@ -19,6 +33,12 @@ export default async function Info({ params }: { params: Promise<{ page: string 
   if (!info) notFound();
   return (
     <section className="section stack info">
+      <Breadcrumbs
+        items={[
+          { name: 'Početna', href: '/' },
+          { name: info[0], href: `/informacije/${page}` },
+        ]}
+      />
       <p className="eyebrow accent">OFFWALL / INFORMACIJE</p>
       <h1 className="section-title">{info[0]}</h1>
       <div className="prose">

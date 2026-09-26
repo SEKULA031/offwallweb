@@ -4,8 +4,22 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { money, type Product } from '@/lib/types';
 import { useCart } from './cart-provider';
-export function ProductDetail({ product, demo }: { product: Product; demo: boolean }) {
-  const [selected, setSelected] = useState<string | undefined>(product.variants[0]?.id);
+import { imageAlt } from '@/lib/seo';
+import { categoryPath } from '@/lib/categories';
+export function ProductDetail({
+  product,
+  demo,
+  canOrder = false,
+  initialVariant,
+}: {
+  product: Product;
+  demo: boolean;
+  canOrder?: boolean;
+  initialVariant?: string;
+}) {
+  const [selected, setSelected] = useState<string | undefined>(
+    product.variants.find((v) => v.id === initialVariant)?.id ?? product.variants[0]?.id,
+  );
   const [image, setImage] = useState(0);
   const [added, setAdded] = useState(false);
   const { add } = useCart();
@@ -16,10 +30,11 @@ export function ProductDetail({ product, demo }: { product: Product; demo: boole
         <div className="detail-art">
           <Image
             src={product.images[image]}
-            alt={product.name}
+            alt={imageAlt(product, product.images[image])}
             fill
             priority
-            sizes="(max-width: 900px) 90vw, 48vw"
+            fetchPriority="high"
+            sizes="(max-width: 1000px) 90vw, 48vw"
           />
         </div>
         {product.images.length > 1 && (
@@ -32,18 +47,27 @@ export function ProductDetail({ product, demo }: { product: Product; demo: boole
                 key={src}
                 onClick={() => setImage(i)}
               >
-                <Image src={src} alt="" width={70} height={80} />
+                <Image src={src} alt={imageAlt(product, src)} width={70} height={80} />
               </button>
             ))}
           </div>
         )}
       </div>
       <div className="stack">
-        <p className="eyebrow">{product.category}</p>
+        <Link className="eyebrow" href={categoryPath(product.category)}>
+          {product.category}
+        </Link>
         <h1 className="product-title">{product.name}</h1>
         <p>{product.description}</p>
         <p className="price">{variant ? money(variant.price) : 'Trenutno nedostupno'}</p>
         {demo && <p className="caption muted">Probne cene — pregled dizajna.</p>}
+        {!demo && (
+          <p className="caption muted">
+            {canOrder && variant
+              ? 'Dostupno za poručivanje.'
+              : 'Poručivanje trenutno nije dostupno.'}
+          </p>
+        )}
         <fieldset>
           <legend>Format / cm</legend>
           <div className="options">

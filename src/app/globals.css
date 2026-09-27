@@ -367,7 +367,10 @@ small {
 }
 .frame-art {
   position: relative;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 5;
+}
+.frame-art img {
+  object-fit: contain;
 }
 .steps {
   display: grid;
@@ -689,8 +692,9 @@ footer .controls {
     grid-template-columns: 1fr;
   }
   .frame-art {
-    aspect-ratio: auto;
-    height: 460px;
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
   }
   .product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -785,9 +789,7 @@ footer .controls {
     grid-template-columns: 1fr;
     padding: 16px;
   }
-  .frame-art {
-    height: 340px;
-  }
+
   .feature {
     gap: 24px;
   }

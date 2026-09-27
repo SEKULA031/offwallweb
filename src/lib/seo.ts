@@ -29,9 +29,9 @@ export function pageMetadata(
   };
 }
 export const homeSeo = {
-  title: 'Dizajnirani posteri i ramovi za tvoj zid',
+  title: 'OFFWALL: Posteri za zid | Sport, film i serije, street culture, lifestyle, arhitektura',
   description:
-    'OFFWALL posteri inspirisani sportom, filmovima, patikama i arhitekturom. Izaberi motiv, dimenzije i ram ili nam pošalji ideju za poster po meri.',
+    'Posteri za zid: sport, filmovi i serije, street culture, lifestyle i arhitektura. Izaberi svoj motiv i dimenzije, sa crnim, belim ili drvenim ramom, ili bez rama.',
 };
 export const catalogSeo = {
   title: 'Posteri za zid — kolekcija sa ramom i bez rama',

@@ -8,7 +8,7 @@ import { Header } from '@/components/header';
 import Link from 'next/link';
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: `${homeSeo.title} | OFFWALL`, template: '%s | OFFWALL' },
+  title: { default: homeSeo.title, template: '%s | OFFWALL' },
   description: homeSeo.description,
   openGraph: { type: 'website', locale: 'sr_RS', siteName: 'OFFWALL' },
 };

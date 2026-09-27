@@ -7,13 +7,7 @@ import { StructuredData } from '@/components/structured-data';
 import { homeSeo, pageMetadata, SITE_URL } from '@/lib/seo';
 export async function generateMetadata() {
   const { demo } = await getCatalog();
-  return pageMetadata(
-    `${homeSeo.title} | OFFWALL`,
-    homeSeo.description,
-    '/',
-    '/artwork/jordan-chicago.png',
-    demo,
-  );
+  return pageMetadata(homeSeo.title, homeSeo.description, '/', '/artwork/jordan-chicago.png', demo);
 }
 export const dynamic = 'force-dynamic';
 export default async function Home() {
@@ -27,8 +21,19 @@ export default async function Home() {
           '@id': `${SITE_URL}/#organization`,
           name: 'OFFWALL',
           url: SITE_URL,
-          logo: `${SITE_URL}/offwall-logo.png`,
+          logo: `${SITE_URL}/offwall-logo-transparent.png`,
           sameAs: ['https://www.instagram.com/offwall.rs/'],
+        }}
+      />
+      <StructuredData
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          '@id': `${SITE_URL}/#website`,
+          name: 'OFFWALL',
+          alternateName: 'Off Wall',
+          url: `${SITE_URL}/`,
+          publisher: { '@id': `${SITE_URL}/#organization` },
         }}
       />
       <section className="hero section ink">
@@ -81,10 +86,10 @@ export default async function Home() {
       <section className="section surface feature" id="ramovi">
         <div className="frame-art">
           <Image
-            src="/artwork/negroni.png"
-            alt="Negroni poster sa ramom — detalj završnice"
+            src="/ramovi-crni-beli-drvo.webp"
+            alt="Ilustracija uglova ramova: crni mat, jednostavni beli i drvo toplog tamnog tona, odozgo nadole"
             fill
-            sizes="(max-width: 900px) 90vw, 45vw"
+            sizes="(max-width: 1000px) 90vw, 45vw"
           />
         </div>
         <div className="stack">
@@ -118,7 +123,9 @@ export default async function Home() {
               </article>
             ))}
           </div>
-          <p className="caption muted">Dostupne opcije i tačne cene proveri uz izabrani poster.</p>
+          <p className="caption muted">
+            Ilustrativni prikaz završnica. Dostupne opcije i tačne cene proveri uz izabrani poster.
+          </p>
           <Link className="button dark" href="/posteri">
             Izaberi poster i ram
           </Link>

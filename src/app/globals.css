@@ -85,7 +85,11 @@ h2,
   line-height: 1.07;
   font-weight: 500;
 }
-h3 {
+.product-card-title {
+  letter-spacing: normal;
+}
+h3,
+.product-card-title {
   font-size: 22px;
   line-height: 28px;
   font-weight: 500;
@@ -760,7 +764,7 @@ footer .controls {
   .product-card {
     gap: 12px;
   }
-  .product-card h3 {
+  .product-card .product-card-title {
     font-size: 18px;
     line-height: 24px;
   }

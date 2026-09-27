@@ -7,7 +7,13 @@ import { StructuredData } from '@/components/structured-data';
 import { homeSeo, pageMetadata, SITE_URL } from '@/lib/seo';
 export async function generateMetadata() {
   const { demo } = await getCatalog();
-  return pageMetadata(homeSeo.title, homeSeo.description, '/', '/artwork/jordan-chicago.png', demo);
+  return pageMetadata(
+    `${homeSeo.title} | OFFWALL`,
+    homeSeo.description,
+    '/',
+    '/artwork/jordan-chicago.png',
+    demo,
+  );
 }
 export const dynamic = 'force-dynamic';
 export default async function Home() {

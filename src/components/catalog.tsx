@@ -13,6 +13,7 @@ export function Catalog({
   demo: boolean;
   compact?: boolean;
 }) {
+  const ProductHeading = compact ? 'h3' : 'h2';
   const [category, setCategory] = useState('Svi posteri');
   const [sort, setSort] = useState('default');
   const [query, setQuery] = useState('');
@@ -86,9 +87,9 @@ export function Catalog({
               />
             </Link>
             <span className="caption muted">{p.category}</span>
-            <h3>
+            <ProductHeading className="product-card-title">
               <Link href={`/posteri/${p.slug}`}>{p.name}</Link>
-            </h3>
+            </ProductHeading>
             <p>
               od {money(price(p))}
               {demo ? '*' : ''}
